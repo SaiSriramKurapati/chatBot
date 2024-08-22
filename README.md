@@ -7,6 +7,7 @@ This is a full-stack chatbot application built using React with TypeScript for t
 
 - Features
 - Flow Diagram
+- Figma Design
 - How The Frontend Works
 - How The Backend Works
 - Installation
@@ -22,7 +23,6 @@ This is a full-stack chatbot application built using React with TypeScript for t
   - Running the Frontend
 - Folder Structure
 - API Endpoints
-- Figma Design
 
 ## Features
 
@@ -36,7 +36,11 @@ This is a full-stack chatbot application built using React with TypeScript for t
 
 ![Alt text](/flowchart.jpg)
 
-## How The Fronted Works
+## Figma Design
+
+[https://www.figma.com/design/ytGFfd9oX4sZjueqrKtT7B/AI-Chat-Bot?m=auto&t=BcXUxw2sXKvdxYWf-6](https://www.figma.com/design/ytGFfd9oX4sZjueqrKtT7B/AI-Chat-Bot?m=auto&t=BcXUxw2sXKvdxYWf-6)
+
+## How The Frontend Works
 
 - **User Interaction**: The user interacts with the chat interface by typing a message or clicking on a predefined option.
 
@@ -200,7 +204,3 @@ chat-widget/
 - PUT /messages/{id} - Update an existing message.
 - DELETE /messages/{id} - Delete a message and all subsequent messages.
 - GET /messages/ - Retrieve all messages (for receiving cached response).
-
-## Figma Design
-
-[https://www.figma.com/design/ytGFfd9oX4sZjueqrKtT7B/AI-Chat-Bot?m=auto&t=BcXUxw2sXKvdxYWf-6](https://www.figma.com/design/ytGFfd9oX4sZjueqrKtT7B/AI-Chat-Bot?m=auto&t=BcXUxw2sXKvdxYWf-6)
