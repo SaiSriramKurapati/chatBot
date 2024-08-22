@@ -3,6 +3,10 @@
 
 This is a full-stack chatbot application built using React with TypeScript for the frontend and Python with FastAPI for the backend. The application leverages the OpenAI GPT-3.5 Turbo model to generate responses, Redis for caching, and PostgreSQL as the database. Unit tests are implemented using Pytest. All dependencies are installed and managed inside a virtual environment.
 
+# How it Looks
+
+![Alt text](/chatBot.png)
+
 ## Table of Contents
 
 - Features
