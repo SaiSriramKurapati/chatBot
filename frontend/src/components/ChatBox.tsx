@@ -34,6 +34,92 @@ const ChatBox: React.FC = () => {
   // Reference to the chat container, used for scrolling to the bottom of the chat.
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
+  // State to track whether the user is currently scrolling
+  const [isUserScrolling, setIsUserScrolling] = useState(false);
+
+  /**
+   * First useEffect:
+   * - Adds an event listener to track when the user is scrolling the chat container.
+   * - Updates the `isUserScrolling` state based on whether the user is at the bottom of the chat.
+   * - If the user is not at the bottom, `isUserScrolling` is set to true, indicating that automatic
+   *   scrolling should be disabled.
+   */
+  useEffect(() => {
+    const handleScroll = () => {
+      if (chatContainerRef.current) {
+        // Determine if the user has scrolled to the bottom of the chat container
+        const isAtBottom = chatContainerRef.current.scrollTop + chatContainerRef.current.clientHeight >= chatContainerRef.current.scrollHeight;
+        // Update the state to reflect whether the user is scrolling away from the bottom
+        setIsUserScrolling(!isAtBottom);
+      }
+    };
+    // Add the scroll event listener to the chat container
+    if (chatContainerRef.current) {
+      chatContainerRef.current.addEventListener('scroll', handleScroll);
+    }
+    // Cleanup function to remove the scroll event listener when the component is unmounted
+    return () => {
+      if (chatContainerRef.current) {
+        chatContainerRef.current.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []); // Empty dependency array ensures this effect runs only once on mount
+
+  /**
+   * Second useEffect:
+   * - Automatically scrolls to the bottom of the chat container whenever new messages are added,
+   *   but only if the user is not actively scrolling.
+   * - This ensures that the chat stays up-to-date with the latest messages unless the user is
+   *   intentionally viewing older messages.
+   */
+  useEffect(() => {
+    // Check if the chat container exists and the user is not scrolling
+    if (chatContainerRef.current && !isUserScrolling) {
+      // Automatically scroll to the bottom of the chat container
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight; // Scroll to the bottom of the chat.
+    }
+  }, [messages, isUserScrolling]); // Effect runs whenever `messages` or `isUserScrolling` changes
+
+  /**
+   * Third useEffect:
+   * - Similar to the first useEffect, this adds an event listener for scroll events but includes
+   *   a timeout to re-enable auto-scrolling after the user has stopped scrolling for 1.5 seconds.
+   * - This prevents the chat from snapping to the bottom while the user is scrolling and gives them
+   *   time to read older messages.
+   */
+  useEffect(() => {
+    let timeoutId: string | number | NodeJS.Timeout | undefined;
+  
+    const handleScroll = () => {
+      if (chatContainerRef.current) {
+        // Check if the user has scrolled to the bottom
+        const isAtBottom = chatContainerRef.current.scrollTop + chatContainerRef.current.clientHeight >= chatContainerRef.current.scrollHeight;
+        // Update scrolling state based on the user's position in the chat
+        setIsUserScrolling(!isAtBottom);
+  
+        // Clear any existing timeout to prevent conflicts
+        clearTimeout(timeoutId);
+        if (!isAtBottom) {
+          // Set a timeout to re-enable auto-scrolling after 1.5 seconds of inactivity
+          timeoutId = setTimeout(() => setIsUserScrolling(false), 1500); // Wait 1.5 seconds after user stops scrolling
+        }
+      }
+    };
+    
+    // Add the scroll event listener to the chat container
+    if (chatContainerRef.current) {
+      chatContainerRef.current.addEventListener('scroll', handleScroll);
+    }
+    // Cleanup function to remove the scroll event listener and clear the timeout on unmount
+    return () => {
+      if (chatContainerRef.current) {
+        chatContainerRef.current.removeEventListener('scroll', handleScroll);
+      }
+      clearTimeout(timeoutId);
+    };
+  }, []); // Empty dependency array ensures this effect runs only once on mount
+  
+  
   // Effect hook to save messages to local storage whenever the messages state changes.
   useEffect(() => {
     // Convert messages to a serializable format for local storage.
@@ -55,14 +141,7 @@ const ChatBox: React.FC = () => {
     // Clean up the interval on component unmount
     return () => clearInterval(intervalId);
     }, []);
-
-  // Effect hook to scroll to the bottom of the chat whenever the messages change.
-  useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight; // Scroll to the bottom of the chat.
-    }
-  }, [messages]);
-
+  
   // Function to send a message to the backend and receive a response.
   const sendMessageToBackend = async (content: string) => {
     try {
@@ -135,15 +214,24 @@ const ChatBox: React.FC = () => {
         currentMessage += response[currentMessage.length];
         setMessages(prevMessages => {
           const updatedMessages = [...prevMessages];
-          updatedMessages[updatedMessages.length - 1].message = currentMessage;
+          // updatedMessages[updatedMessages.length - 1].message = currentMessage;
+          // Ensure the array is not empty and the last element exists before updating
+          if (updatedMessages.length > 0 && updatedMessages[updatedMessages.length - 1]) {
+            updatedMessages[updatedMessages.length - 1].message = currentMessage;
+        }
           return updatedMessages;
         });
       } else {
         clearInterval(typingInterval);
         setMessages(prevMessages => {
           const updatedMessages = [...prevMessages];
-          updatedMessages[updatedMessages.length - 1].isTyping = false;
-          updatedMessages[updatedMessages.length - 1].message = response;
+          // updatedMessages[updatedMessages.length - 1].isTyping = false;
+          // updatedMessages[updatedMessages.length - 1].message = response;
+          // Ensure the array is not empty and the last element exists before updating
+          if (updatedMessages.length > 0 && updatedMessages[updatedMessages.length - 1]) {
+            updatedMessages[updatedMessages.length - 1].isTyping = false;
+            updatedMessages[updatedMessages.length - 1].message = response;
+        }
           return updatedMessages;
         });
       }
