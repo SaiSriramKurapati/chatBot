@@ -38,7 +38,7 @@ This is a full-stack chatbot application built using React with TypeScript for t
 
 ## Figma Design
 
-[https://www.figma.com/design/ytGFfd9oX4sZjueqrKtT7B/AI-Chat-Bot?m=auto&t=BcXUxw2sXKvdxYWf-6](https://www.figma.com/design/ytGFfd9oX4sZjueqrKtT7B/AI-Chat-Bot?m=auto&t=BcXUxw2sXKvdxYWf-6)
+[https://www.figma.com/design/7z8gsNZ2Johqv5DoeEy3dB/AI-Chat-Bot?m=auto&t=tX2RRINdFV2a7OSs-6](https://www.figma.com/design/7z8gsNZ2Johqv5DoeEy3dB/AI-Chat-Bot?m=auto&t=tX2RRINdFV2a7OSs-6)
 
 ## How The Frontend Works
 
