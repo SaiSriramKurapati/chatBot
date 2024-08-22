@@ -74,7 +74,7 @@ This is a full-stack chatbot application built using React with TypeScript for t
 ## Installation
 
 ### Using Docker (Recommended)
-I recommend using Docker as it simplifies the setup headaches.
+I recommend using Docker as it simplifies the setup headaches. Also it'll automatically runs the Unit Tests for Backend.
 
    1. Install Docker
 
@@ -147,14 +147,21 @@ Replace <username> and <password> with your PostgreSQL credentials.
 
 1. Setup Environment Variables
 
-   Create a .env file in the backend directory with the following content:
+   Create a .env file in the root directory with the following content:
    ```
-   DATABASE_URL=postgresql://<username>:<password>@localhost/chat_db
-   REDIS_HOST=localhost
-   REDIS_PORT=6379
-   OPENAI_API_KEY=your-openai-api-key
+   POSTGRES_USER=<Db User Name>
+   POSTGRES_PASSWORD=<Db Password>
+   POSTGRES_DB=<DB Name>
+   POSTGRES_HOST=<DB Host>
+
+   REDIS_URL=<redis://redis:6379>
+   OPENAI_API_KEY=<your-openai-api-secret-key>
+
+   # Test database
+   TEST_POSTGRES_DB=<Test DB Name>
+   TEST_POSTGRES_HOST=<Test DB Host>
    ```
-   Replace <username>, <password>, and your-openai-api-key with your actual values.
+   Replace DB configuration, and your-openai-api-secret-key with your actual values.
 
 #### Redis Setup
 
