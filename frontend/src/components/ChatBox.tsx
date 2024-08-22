@@ -147,7 +147,7 @@ const ChatBox: React.FC = () => {
           return updatedMessages;
         });
       }
-    }, 20);
+    }, 5);
   };
 
   // Function to handle clicking on one of the chat options (quick replies)
@@ -194,6 +194,7 @@ const ChatBox: React.FC = () => {
   const onDeleteMessagesFrom = (id: number) => {
     setMessages((prevMessages) => prevMessages.filter((msg) => msg.id < id));  // Keep only the messages before the specified ID.
   };
+
 
   // The UI of the ChatBox component.
   return (
