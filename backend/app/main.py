@@ -12,6 +12,8 @@ import hashlib
 from openai import OpenAI
 import logging
 import yaml
+from fastapi.staticfiles import StaticFiles
+app.mount("/", StaticFiles(directory="../../frontend/build", html=True), name="static")
 
 # === Import Internal Modules ===
 # Import database session, models, schemas, and CRUD operations.
@@ -42,7 +44,8 @@ client = OpenAI(api_key=cfg['openai']['api_key'])
 # === Configuration for SQLAlchemy Database URL ===
 # Use environment variable for the database URL if set, otherwise fall back to the value from the YAML configuration.
 
-SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URL', cfg['database']['main'])
+# SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URL', cfg['database']['main']) # uncomment this line if you are cloning this repo and running in your local
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
 
 # === Initialize FastAPI App ===
 # Create an instance of the FastAPI application and configure CORS.
