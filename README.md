@@ -10,6 +10,7 @@ This is a full-stack chatbot application built using React with TypeScript for t
 - Figma Design
 - How The Frontend Works
 - How The Backend Works
+- Edge Cases
 - Installation
 - Backend Setup
   - Python Virtual Environment
@@ -59,6 +60,10 @@ This is a full-stack chatbot application built using React with TypeScript for t
 - **Database Operations**: All chat messages are stored in PostgreSQL. When a new message is received, it's saved in the database along with the bot's response. Similarly, when a message is edited or deleted, these changes are reflected in the database.
 
 - **Unit Testing with Pytest**: The backend is equipped with unit tests using Pytest. These tests ensure that each component of the backend, from API endpoints to database operations, works as expected.
+
+## Edge Cases
+
+[https://docs.google.com/document/d/1ncqfzEOKYPt6hLeQN05GBfNyP6gtQF0gJvSJLe67ys4/edit?usp=sharing](https://docs.google.com/document/d/1ncqfzEOKYPt6hLeQN05GBfNyP6gtQF0gJvSJLe67ys4/edit?usp=sharing)
 
 ## Installation
 
