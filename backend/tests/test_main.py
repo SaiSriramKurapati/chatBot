@@ -27,8 +27,8 @@ with open(config_path, "r") as ymlfile:
     cfg = yaml.safe_load(ymlfile)
 
 # Use environment variable for the database URL if set, otherwise fall back to the value from the YAML configuration.
-# SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URL', cfg['database']['main']) # uncomment this line if you are cloning this repo and running in your local
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
+SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URL', cfg['database']['main']) # uncomment this line if you are cloning this repo and running in your local
+# SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
 
 # Initialize Redis client
 redis_client = redis.Redis(host='localhost', port=6379, db=0)

@@ -21,8 +21,8 @@ with open(config_path, "r") as ymlfile:
 # This line determines the database connection URL.
 # It first checks if a 'DATABASE_URL' environment variable is set.
 # If the environment variable is not set, it falls back to using the 'main' database URL specified in the YAML configuration file.
-# SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URL', cfg['database']['main']) # uncomment this line if you are cloning this repo and running in your local
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
+SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URL', cfg['database']['main']) # uncomment this line if you are cloning this repo and running in your local
+# SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
 
 # === Create SQLAlchemy Engine ===
 # The engine is the core interface to the database in SQLAlchemy.

@@ -18,7 +18,7 @@ from fastapi.staticfiles import StaticFiles
 # Create an instance of the FastAPI application and configure CORS.
 
 app = FastAPI()
-app.mount("/", StaticFiles(directory="../../frontend/build", html=True), name="static")
+# app.mount("/", StaticFiles(directory="../../frontend/build", html=True), name="static")
 
 # === Import Internal Modules ===
 # Import database session, models, schemas, and CRUD operations.
@@ -45,12 +45,13 @@ with open(config_path, "r") as ymlfile:
 # Initialize the OpenAI client using the API key from the config file.
 
 client = OpenAI(api_key=cfg['openai']['api_key'])
+# client = OpenAI(api_key=os.getenv("api_key"))
 
 # === Configuration for SQLAlchemy Database URL ===
 # Use environment variable for the database URL if set, otherwise fall back to the value from the YAML configuration.
 
-# SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URL', cfg['database']['main']) # uncomment this line if you are cloning this repo and running in your local
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
+SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URL', cfg['database']['main']) # uncomment this line if you are cloning this repo and running in your local
+# SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
 
 # === Initialize Redis Client for Caching ===
 # Set up Redis client to cache chatbot responses.
