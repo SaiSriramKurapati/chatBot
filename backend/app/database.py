@@ -4,25 +4,8 @@ from sqlalchemy.orm import sessionmaker
 import os
 import yaml
 
-# === Load Configuration from YAML File ===
-# This block loads the configuration settings from a YAML file.
-# The configuration typically includes database connection strings and other environment-specific settings.
-# Get the absolute path to the 'backend' directory
-backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-
-# Construct the full path to the 'config.yml' file
-config_path = os.path.join(backend_dir, 'config.yaml')
-
-# Load the YAML configuration
-with open(config_path, "r") as ymlfile:
-    cfg = yaml.safe_load(ymlfile)
-
-# === Determine Database URL ===
-# This line determines the database connection URL.
-# It first checks if a 'DATABASE_URL' environment variable is set.
-# If the environment variable is not set, it falls back to using the 'main' database URL specified in the YAML configuration file.
-SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URL', cfg['database']['main']) # uncomment this line if you are cloning this repo and running in your local
-# SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
+# Initializing Environmental Variables
+SQLALCHEMY_DATABASE_URL = f"postgresql://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@{os.getenv('POSTGRES_HOST')}/{os.getenv('POSTGRES_DB')}"
 
 # === Create SQLAlchemy Engine ===
 # The engine is the core interface to the database in SQLAlchemy.
