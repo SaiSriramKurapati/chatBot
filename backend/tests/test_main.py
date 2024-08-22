@@ -2,24 +2,24 @@
 # Import necessary modules and packages for the application.
 
 import os
-import sys
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'app')))
+# import sys
+# sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import pytest
 from sqlalchemy import create_engine, inspect
 from sqlalchemy.orm import sessionmaker
-from app.database import Base, get_db
-from app.main import app
+from backend.app.database import Base, get_db  # Adjusted import
+from backend.app.main import app  # Adjusted import
 from fastapi.testclient import TestClient
 import redis
 from unittest.mock import MagicMock, patch
 import yaml
 
 # Initializing Environmental Variables
-SQLALCHEMY_DATABASE_URL = f"postgresql://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@{os.getenv('POSTGRES_HOST')}/{os.getenv('POSTGRES_DB')}"
+SQLALCHEMY_DATABASE_URL = f"postgresql://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@{os.getenv('TEST_POSTGRES_HOST')}/{os.getenv('POSTGRES_DB')}"
 
 # Initialize Redis client
-redis_url = os.getenv('REDIS_URL')
-redis_client = redis.from_url(redis_url)
+redis_url       = os.getenv('REDIS_URL')
+redis_client    = redis.from_url(redis_url)
 
 # Create an SQLAlchemy engine connected to the test database.
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
@@ -85,7 +85,7 @@ def test_table_creation(db_session):
 # Pytest fixture to mock the Redis client for testing purposes.
 @pytest.fixture(scope="function")
 def mock_redis_client(mocker):
-    with patch("app.main.redis_client") as mock_redis:
+    with patch("backend.app.main.redis_client") as mock_redis:
         mock_redis.get.return_value = None
         yield mock_redis
 
@@ -96,7 +96,7 @@ def generate_content_hash(content: str) -> str:
 
 def test_create_message(client, mocker, mock_redis_client):
     # Mock the generate_response function to return a specific response
-    mock_generate_response = mocker.patch("app.main.generate_response", return_value="Mocked response")
+    mock_generate_response = mocker.patch("backend.app.main.generate_response", return_value="Mocked response")
     
     # Send a POST request to create a new message
     response = client.post("/messages/", json={"content": "Hello"})

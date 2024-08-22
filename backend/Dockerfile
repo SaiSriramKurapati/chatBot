@@ -2,7 +2,7 @@
 FROM python:3.9-slim AS base
 
 # Working directory
-WORKDIR /app
+WORKDIR /backend
 
 # Copying the requirements file into the container
 COPY requirements.txt .
@@ -22,9 +22,9 @@ EXPOSE 8000
 FROM base AS prod
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
-# #Test stage
-# FROM base AS test 
-# # Install test dependencies (pytest)
-# RUN pip install pytest
-# # Command to run the tests
-# CMD ["pytest"]
+#Test stage
+FROM base AS test 
+# Install test dependencies (pytest)
+RUN pip install pytest
+# Command to run the tests
+CMD ["pytest"]
