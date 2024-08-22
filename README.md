@@ -5,8 +5,10 @@ This is a full-stack chatbot application built using React with TypeScript for t
 
 ## Table of Contents
 
-- Flow Diagram
 - Features
+- Flow Diagram
+- How The Frontend Works
+- How The Backend Works
 - Installation
 - Backend Setup
   - Python Virtual Environment
@@ -14,17 +16,13 @@ This is a full-stack chatbot application built using React with TypeScript for t
   - Environment Variables
   - Redis Setup
   - Running the Backend
-  - Testing the Backend
+  - Backend Unit Tests
 - Frontend Setup
   - Installing Node.js and React
   - Running the Frontend
 - Folder Structure
 - API Endpoints
 - Running Unit Tests
-
-## FLOW DIAGRAM
-
-![Alt text](/flowchart.jpg)
 
 ## Features
 
@@ -33,6 +31,30 @@ This is a full-stack chatbot application built using React with TypeScript for t
 - **Database**: PostgreSQL is used for storing chat messages.
 - **Caching**: Redis is used to cache responses to improve performance.
 - **Unit Testing**: Pytest is used for creating unit tests to ensure application reliability.
+
+## FLOW DIAGRAM
+
+![Alt text](/flowchart.jpg)
+
+## How The Fronted Works
+
+- **User Interaction**: The user interacts with the chat interface by typing a message or clicking on a predefined option.
+
+- **Sending Messages**: When a user sends a message, the handleSendMessage function is triggered. This function posts the message content to the backend via an API call using Axios.
+
+- **Receiving and Displaying Responses**: The backend processes the message, generates a response (either from the AI or from the cache), and sends it back to the frontend. The frontend then displays this response as a new chat bubble. The frontend also simulates a typing indicator to enhance the user experience.
+
+- **Message Persistence**: The messages are stored in the local storage so that even if the user refreshes the page, the chat history remains intact. However, this history is cleared every 5 minutes to prevent the local storage from growing too large.
+
+## How The Backend Works
+
+- **API Endpoints**: The backend exposes several RESTful API endpoints, such as /messages/ for sending and receiving messages, and /messages/{id} for updating and deleting specific messages.
+
+- **Processing Requests**: When the frontend sends a message, the backend first checks Redis to see if a response to this query is already cached. If so, it retrieves the cached response. If not, it processes the message, generates a response (using an AI model or predefined logic), saves it to the database, and caches it in Redis for future requests.
+
+- **Database Operations**: All chat messages are stored in PostgreSQL. When a new message is received, it's saved in the database along with the bot's response. Similarly, when a message is edited or deleted, these changes are reflected in the database.
+
+- **Unit Testing with Pytest**: The backend is equipped with unit tests using Pytest. These tests ensure that each component of the backend, from API endpoints to database operations, works as expected.
 
 ## Installation
 
@@ -109,7 +131,7 @@ uvicorn app.main:app --reload
 ```
 The backend API should now be running on http://127.0.0.1:8000.
 
-#### Unit Testing 
+#### Backend Unit Tests 
 
 ```
 pytest
@@ -178,3 +200,7 @@ chat-widget/
 - PUT /messages/{id} - Update an existing message.
 - DELETE /messages/{id} - Delete a message and all subsequent messages.
 - GET /messages/ - Retrieve all messages (for receiving cached response).
+
+## Figma Design
+
+href=[https://www.figma.com/design/ytGFfd9oX4sZjueqrKtT7B/AI-Chat-Bot?m=auto&t=BcXUxw2sXKvdxYWf-6](https://www.figma.com/design/ytGFfd9oX4sZjueqrKtT7B/AI-Chat-Bot?m=auto&t=BcXUxw2sXKvdxYWf-6)
