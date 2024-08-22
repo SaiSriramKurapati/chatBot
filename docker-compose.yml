@@ -1,0 +1,38 @@
+version: '3.8'  # docker compose file format version
+
+services:   # services used in our application 
+  backend:  # Service definition for the backend application.
+    build: ./backend  # Builds the backend service from the Dockerfile located in the ./backend directory.
+    container_name: backend # Assigns the container a name "backend".
+    ports:
+      - "8000:8000"  # Maps port 8000 on the host to port 8000 on the container.
+    depends_on:
+      - db   # Ensures the db service is started before the backend service.
+      - redis  # Ensure the redis service is started before the backend service.
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/mydatabase  # URL to connect to the PostgreSQL database.
+      - REDIS_URL=redis://redis:6379  # URL to connect to the Redis service.
+
+  db:   # service definition for the PostgreSQL database.
+    image: postgres:13   # Uses the official PostgreSQL image, version 13
+    container_name: db   # Names the container 'db'
+    environment:
+      POSTGRES_USER: sriramsangeetha  
+      POSTGRES_PASSWORD: Sriyas@1729  
+      POSTGRES_DB: chatbot_database  
+    ports:
+      - "5432:5432"  # Maps port 5432 on the host to port 5432 in the container (default PostgreSQL port)
+
+  redis:   # Service definition for redis.
+    image: redis:6.2  # Uses the official Redis image, version 6.2
+    container_name: redis  # Names the container 'redis'
+    ports:
+      - "6379:6379"  # Maps port 6379 on the host to port 6379 in the container (default Redis port)
+
+  frontend:  # Service definition for the frontend application.
+    build: ./frontend  # Builds the frontend service from the Dockerfile located in the ./frontend directory.
+    container_name: frontend  # Names the container 'frontend'
+    ports:
+      - "3000:3000"  # Maps port 3000 on the host to port 3000 in the container
+    depends_on:
+      - backend  # Ensures the 'backend' service starts before the 'frontend' service

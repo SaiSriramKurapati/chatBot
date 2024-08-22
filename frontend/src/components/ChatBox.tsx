@@ -100,8 +100,8 @@ const ChatBox: React.FC = () => {
         // Clear any existing timeout to prevent conflicts
         clearTimeout(timeoutId);
         if (!isAtBottom) {
-          // Set a timeout to re-enable auto-scrolling after 1.5 seconds of inactivity
-          timeoutId = setTimeout(() => setIsUserScrolling(false), 1500); // Wait 1.5 seconds after user stops scrolling
+          // Set a timeout to re-enable auto-scrolling after 100 seconds of inactivity
+          timeoutId = setTimeout(() => setIsUserScrolling(false), 100000); // Wait 100 seconds after user stops scrolling
         }
       }
     };

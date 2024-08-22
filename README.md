@@ -12,6 +12,8 @@ This is a full-stack chatbot application built using React with TypeScript for t
 - How The Backend Works
 - Edge Cases
 - Installation
+   - Using Docker (Recommended)
+   - Without Docker
 - Backend Setup
   - Python Virtual Environment
   - Database Setup
@@ -66,6 +68,29 @@ This is a full-stack chatbot application built using React with TypeScript for t
 [https://docs.google.com/document/d/1ncqfzEOKYPt6hLeQN05GBfNyP6gtQF0gJvSJLe67ys4/edit?usp=sharing](https://docs.google.com/document/d/1ncqfzEOKYPt6hLeQN05GBfNyP6gtQF0gJvSJLe67ys4/edit?usp=sharing)
 
 ## Installation
+
+### Using Docker (Recommended)
+I recommend using Docker as it simplifies the setup headaches.
+
+   1. Install Docker
+
+      ```
+      Download Docker Desktop from the official website.
+      ```
+   2. Clone the Repository:
+      ```
+      git clone https://github.com/SaiSriramKurapati/chatBot.git
+      cd chatBot
+      ```
+   3. Build and run the Dockker containers:
+      ```
+      docker-compose up --build
+      ```
+   4. Access the application
+      - The frontend application will be running at http://localhost:3000.
+      - The backend API will be running at http://localhost:8000.
+
+### Without Docker
 
 ### Prerequisites
 
