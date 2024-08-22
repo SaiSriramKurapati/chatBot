@@ -18,11 +18,9 @@ import yaml
 # Loads the configuration file (config.yml) that contains database URLs and other settings.
 # Get the absolute path to the 'backend' directory
 backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-print(backend_dir)
 
 # Construct the full path to the 'config.yml' file
 config_path = os.path.join(backend_dir, 'config.yaml')
-print(config_path)
 
 # Load the YAML configuration
 with open(config_path, "r") as ymlfile:
