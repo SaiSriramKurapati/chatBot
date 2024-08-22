@@ -14,31 +14,18 @@ import redis
 from unittest.mock import MagicMock, patch
 import yaml
 
-# === Configuration and Setup ===
-# Loads the configuration file (config.yml) that contains database URLs and other settings.
-# Get the absolute path to the 'backend' directory
-backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-
-# Construct the full path to the 'config.yml' file
-config_path = os.path.join(backend_dir, 'config.yaml')
-
-# Load the YAML configuration
-with open(config_path, "r") as ymlfile:
-    cfg = yaml.safe_load(ymlfile)
-
-# Use environment variable for the database URL if set, otherwise fall back to the value from the YAML configuration.
-SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URL', cfg['database']['main']) # uncomment this line if you are cloning this repo and running in your local
-# SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL")
+# Initializing Environmental Variables
+SQLALCHEMY_DATABASE_URL = f"postgresql://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@{os.getenv('POSTGRES_HOST')}/{os.getenv('POSTGRES_DB')}"
 
 # Initialize Redis client
-redis_client = redis.Redis(host='localhost', port=6379, db=0)
+redis_url = os.getenv('REDIS_URL')
+redis_client = redis.from_url(redis_url)
 
 # Create an SQLAlchemy engine connected to the test database.
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 # Create a session factory for the test database, with autocommit and autoflush disabled.
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 
 # === Fixtures ===
 # Pytest fixture to create and drop tables for each test to ensure isolation between tests.

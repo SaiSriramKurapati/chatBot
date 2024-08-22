@@ -2,26 +2,69 @@ version: '3.8'  # docker compose file format version
 
 services:   # services used in our application 
   backend:  # Service definition for the backend application.
-    build: ./backend  # Builds the backend service from the Dockerfile located in the ./backend directory.
+    build:
+      context: ./backend  # Builds the backend service from the Dockerfile located in the ./backend directory.
+      target: prod
     container_name: backend # Assigns the container a name "backend".
     ports:
       - "8000:8000"  # Maps port 8000 on the host to port 8000 on the container.
     depends_on:
       - db   # Ensures the db service is started before the backend service.
       - redis  # Ensure the redis service is started before the backend service.
+    env_file:
+      - .env
     environment:
-      - DATABASE_URL=postgresql://postgres:password@db:5432/mydatabase  # URL to connect to the PostgreSQL database.
-      - REDIS_URL=redis://redis:6379  # URL to connect to the Redis service.
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      # - POSTGRES_PORT=${POSTGRES_PORT}
+      - REDIS_URL=${REDIS_URL}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+
+  # test:
+  #   build:
+  #     context: ./backend
+  #     target: test  # Use the test stage for the test service
+  #   container_name: backend_tests
+  #   depends_on:
+  #     - db
+  #     - redis
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     - POSTGRES_USER=${POSTGRES_USER}
+  #     - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  #     - POSTGRES_DB=${TEST_POSTGRES_DB}
+  #     - POSTGRES_HOST=${POSTGRES_HOST}
+  #     # - POSTGRES_PORT=${POSTGRES_PORT}
+  #     - REDIS_URL=${REDIS_URL}
+  #     - OPENAI_API_KEY=${OPENAI_API_KEY}
+
 
   db:   # service definition for the PostgreSQL database.
     image: postgres:13   # Uses the official PostgreSQL image, version 13
     container_name: db   # Names the container 'db'
+    env_file:
+      - .env
     environment:
-      POSTGRES_USER: sriramsangeetha  
-      POSTGRES_PASSWORD: Sriyas@1729  
-      POSTGRES_DB: chatbot_database  
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB} 
     ports:
-      - "5432:5432"  # Maps port 5432 on the host to port 5432 in the container (default PostgreSQL port)
+      - "5434:5434"  # Maps port 5432 on the host to port 5432 in the container (default PostgreSQL port)
+
+  # test_db:
+  #   image: postgres:13
+  #   container_name: test_db
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     POSTGRES_USER: ${POSTGRES_USER}
+  #     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  #     POSTGRES_DB: ${TEST_POSTGRES_DB}
+  #   ports:
+  #     - "5433:5433"  # Map to a different port on the host if needed
 
   redis:   # Service definition for redis.
     image: redis:6.2  # Uses the official Redis image, version 6.2

@@ -25,33 +25,13 @@ import models  # ORM models for database interaction
 import schemas  # Pydantic schemas for data validation
 import crud  # CRUD operations for database access
 
-# === Load Configuration from YAML File ===
-# Load the configuration from the config.yaml file.
-
-# Get the absolute path to the 'backend' directory
-backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-
-# Construct the full path to the 'config.yml' file
-config_path = os.path.join(backend_dir, 'config.yaml')
-
-# Load the YAML configuration
-with open(config_path, "r") as ymlfile:
-    cfg = yaml.safe_load(ymlfile)
-
-
-# === OpenAI Initialization Using API Key from Config ===
-# Initialize the OpenAI client using the API key from the config file.
-client = OpenAI(api_key=cfg['openai']['api_key'])
-
-
-# === Configuration for SQLAlchemy Database URL ===
-# Use environment variable for the database URL if set, otherwise fall back to the value from the YAML configuration.
-SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URL', cfg['database']['main']) # uncomment this line if you are cloning this repo and running in your local
-
+# Initializing Environmental Variables
+SQLALCHEMY_DATABASE_URL = f"postgresql://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@{os.getenv('POSTGRES_HOST')}/{os.getenv('POSTGRES_DB')}"
+redis_url               = os.getenv('REDIS_URL')
+client                  = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 # === Initialize Redis Client for Caching ===
 # Set up Redis client to cache chatbot responses.
-redis_url = os.getenv('REDIS_URL', 'redis://redis:6379')
 redis_client = redis.from_url(redis_url)
 
 # === Database Setup ===

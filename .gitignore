@@ -13,6 +13,7 @@
 
 /__pycache__
 /env
+.env
 *.pyc
 /.pytest_cache
 config.yaml
