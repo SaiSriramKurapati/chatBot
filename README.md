@@ -61,7 +61,7 @@ This is a full-stack chatbot application built using React with TypeScript for t
 
 - **API Endpoints**: The backend exposes several RESTful API endpoints, such as /messages/ for sending and receiving messages, and /messages/{id} for updating and deleting specific messages.
 
-- **Processing Requests**: When the frontend sends a message, the backend first checks Redis to see if a response to this query is already cached. If so, it retrieves the cached response. If not, it processes the message, generates a response (using an AI model or predefined logic), saves it to the database, and caches it in Redis for future requests.
+- **Processing Requests**: When the frontend sends a message, the backend first checks Redis to see if a response to this query is already cached. If so, it retrieves the cached response. If not, it processes the message, generates a response (using GPT), saves it to the database, and caches it in Redis for future requests.
 
 - **Database Operations**: All chat messages are stored in PostgreSQL. When a new message is received, it's saved in the database along with the bot's response. Similarly, when a message is edited or deleted, these changes are reflected in the database.
 
