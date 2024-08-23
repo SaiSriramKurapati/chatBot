@@ -141,19 +141,23 @@ const ChatBox: React.FC = () => {
     // Clean up the interval on component unmount
     return () => clearInterval(intervalId);
     }, []);
-  
-  // Function to send a message to the backend and receive a response.
-  const sendMessageToBackend = async (content: string) => {
+
+    // Function to send a message to the backend and receive the ID and response.
+  const sendMessageToBackend = async (content: string, tempId: number): Promise<{ id: number; response: string }> => {
     try {
       // Post the user's message content to the backend API.
       const json_response = await axios.post('http://127.0.0.1:8000/messages/', {
         content,
       });
-      // Return the response content and message ID from the backend.
-      return [json_response.data.response, json_response.data.id];
+      // Return the response content and message ID from the backend as an object.
+      return {
+        id: json_response.data.id,
+        response: json_response.data.response,
+      };
     } catch (error) {
       // Handle any errors that occur during the request.
-      return ["Sorry, I couldn't process your request.", null];
+      console.error("Error sending message to backend:", error);
+      return { id: tempId, response: "Sorry, I couldn't process your request." };
     }
   };
 
@@ -170,40 +174,72 @@ const ChatBox: React.FC = () => {
         return ["Sorry, I couldn't process your request.", null];  // Return an error message if the update fails.
     }
 
-};
+  };
 
-  // Function to handle sending a new message, including updating the UI and interacting with the backend.
-  const handleSendMessage = async (content: string) => {
-    // Send the user's message content to the backend.
-    const [botResponse, id] = await sendMessageToBackend(content);
+  // Function to handle clicking on one of the chat options (quick replies)
+  const handleOptionClick = (option: string) => {
+    onUserSubmitMessage(option);
+  };
 
-    // Create a new message object for the user's message.
+  // Event handler for when the user submits a message.
+  const onUserSubmitMessage = async (content: string) => {
+    // Display the user's message and typing indicator immediately.
+    const tempId = displayUserAndTypingMessages(content);
+
+    // Make the backend call to fetch the response.
+    handleBackendCall(content, tempId);
+  };
+
+  // Function to handle displaying the user message and typing indicator
+  const displayUserAndTypingMessages = (content: string) => {
+    // Generate a temporary ID for the user's message.
+    const tempId = Date.now();
+
+    // Create a new message object for the user's message with the temporary ID.
     const userMessage: Message = {
-      id: id,  // Use the id from the backend
+      id: tempId,
       username: 'You',
       userImage: usrImage,
       message: content,
       isUser: true,
     };
 
-    // Update the messages state to include the new user message.
-    setMessages((prevMessages) => [...prevMessages, userMessage]);
-
-    // Create a typing indicator message to simulate the bot typing.
-    const typingMessage: Message = {
-        id: id,  // Generate the next id for the typing indicator
+      // Create a typing indicator for the bot.
+      const typingMessage: Message = {
+        id: tempId + 1,  // A temporary ID for the typing indicator.
         username: 'Ava',
         userImage: botImage,
-        message: <TypingIndicator />,  // Use the TypingIndicator component as the message content.
+        message: <TypingIndicator />,
         isUser: false,
         isTyping: true,
-    };
+      };
 
-     // Add the typing indicator to the messages state.
-    setMessages((prevMessages) => [...prevMessages, typingMessage]);
+      // Update the messages state to include the new user message and typing indicator.
+      setMessages((prevMessages) => [...prevMessages, userMessage, typingMessage]);
 
-    // Simulate bot typing effect.
-    simulateTypingEffect(botResponse, id);
+      // Return the temporary ID so it can be used later.
+      return tempId;
+  };
+
+  // Function to handle making the backend call and updating the messages.
+  const handleBackendCall = async (content: string, tempId: number) => {
+    try {
+      // Make the backend call to get the bot response and message ID.
+      const { id: backendId, response: botResponse } = await sendMessageToBackend(content,tempId);
+
+      // Update the user's message with the correct ID from the backend.
+      setMessages((prevMessages) =>
+        prevMessages.map((msg) =>
+          msg.id === tempId ? { ...msg, id: backendId } : msg
+        )
+      );
+
+      // Replace the typing indicator with the actual bot response using simulateTypingEffect.
+      simulateTypingEffect(botResponse, backendId);
+    } catch (error) {
+      console.error('Error sending message to backend:', error);
+      // Optionally handle error (e.g., show an error message in the chat)
+    }
   };
 
   // Simulate typing effect by gradually revealing the bot's response.
@@ -235,12 +271,7 @@ const ChatBox: React.FC = () => {
           return updatedMessages;
         });
       }
-    }, 5);
-  };
-
-  // Function to handle clicking on one of the chat options (quick replies)
-  const handleOptionClick = (option: string) => {
-    handleSendMessage(option);
+    }, 15);
   };
 
   // Handles editing and saving a message.
@@ -353,7 +384,7 @@ const ChatBox: React.FC = () => {
                 </section>
         </div>
 
-        <FooterForm onSendMessage={handleSendMessage} />
+        <FooterForm onSendMessage={onUserSubmitMessage} />
       </div>
     </section>
  );
